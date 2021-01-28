@@ -9,6 +9,7 @@ import { DatabaseModule } from './database/database.module';
 import { PrestationModule } from './prestation/prestation.module';
 import { UsersModule } from './users/users.module';
 import { AuthenticationModule } from './authentication/authentication.module';
+import { PrestataireModule } from './prestataire/prestataire.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { AuthenticationModule } from './authentication/authentication.module';
     PrestationModule,
     UsersModule,
     AuthenticationModule,
+    PrestataireModule,
   ],
   controllers: [AppController],
   providers: [AppService],

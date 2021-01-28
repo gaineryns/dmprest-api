@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { PrestationService } from './prestation.service';
@@ -13,6 +14,7 @@ import { UpdatePrestationDto } from './dto/UpdatePrestationDto';
 import { CreatePrestationDto } from './dto/CreatePrestationDto';
 import JwtAuthenticationGuard from '../authentication/jwt-authentication.guard';
 import { FindOneParams } from '../utils/findOneParams';
+import RequestWithUser from 'src/authentication/RequestWithUser.interface';
 
 @Controller('prestation')
 export class PrestationController {
@@ -30,8 +32,11 @@ export class PrestationController {
 
   @Post()
   @UseGuards(JwtAuthenticationGuard)
-  async createPrestation(@Body() prestation: CreatePrestationDto) {
-    return this.prestationService.createPrestation(prestation);
+  async createPrestation(
+    @Body() prestation: CreatePrestationDto,
+    @Req() req: RequestWithUser,
+  ) {
+    return this.prestationService.createPrestation(prestation, req.user);
   }
 
   @Put(':id')

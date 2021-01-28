@@ -6,6 +6,8 @@ import PostgresErrorCode from '../database/postgresErrorCodes.enum';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import TokenPayload from './tokenPayload.interface';
+import User from 'src/users/models/users.entity';
+import UpdateDto from './dto/update.dto';
 
 @Injectable()
 export class AuthenticationService {
@@ -14,6 +16,7 @@ export class AuthenticationService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {}
+
   public async register(registrationData: RegisterDto) {
     const hashedPassword = await bcrypt.hash(registrationData.password, 10);
     try {
@@ -37,6 +40,9 @@ export class AuthenticationService {
     }
   }
 
+  public async updateUser(id: string, user: UpdateDto) {
+    return await this.usersService.updatedUserById(id, user);
+  }
   public async getAuthenticatedUser(email: string, plainTextPassword: string) {
     try {
       const user = await this.usersService.getByEmail(email);

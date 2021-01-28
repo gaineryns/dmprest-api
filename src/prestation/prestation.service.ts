@@ -6,9 +6,10 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import Prestation from './prestation.entity';
+import Prestation from './models/prestation.entity';
 import { CreatePrestationDto } from './dto/CreatePrestationDto';
 import { UpdatePrestationDto } from './dto/UpdatePrestationDto';
+import User from 'src/users/models/users.entity';
 
 @Injectable()
 export class PrestationService {
@@ -18,26 +19,37 @@ export class PrestationService {
   ) {}
 
   getAllPrestations() {
-    return this.prestationRepo.find();
+    return this.prestationRepo.find({ relations: ['author'] });
   }
 
   async getPrestationById(id: string) {
-    const prestation = await this.prestationRepo.findOne(id);
+    const prestation = await this.prestationRepo.findOne(id, {
+      relations: ['author'],
+    });
     if (prestation) {
       return prestation;
     }
     throw new HttpException('Prestation not found', HttpStatus.NOT_FOUND);
   }
 
-  async createPrestation(prestation: CreatePrestationDto) {
-    const newPrestation = await this.prestationRepo.create(prestation);
-    await this.prestationRepo.save(newPrestation);
-    return newPrestation;
+  async createPrestation(prestation: CreatePrestationDto, user: User) {
+    try {
+      const newPrestation = await this.prestationRepo.create({
+        ...prestation,
+        author: user,
+      });
+      await this.prestationRepo.save(newPrestation);
+      return newPrestation;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+    }
   }
 
   async updatePrestation(id: string, prestation: UpdatePrestationDto) {
     await this.prestationRepo.update(id, prestation);
-    const updatedPrestation = await this.prestationRepo.findOne(id);
+    const updatedPrestation = await this.prestationRepo.findOne(id, {
+      relations: ['author'],
+    });
     if (updatedPrestation) {
       return updatedPrestation;
     }
