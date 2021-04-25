@@ -1,63 +1,34 @@
-import { Transform } from 'class-transformer';
-import User from 'src/users/models/users.entity';
 import {
   Column,
   Entity,
-  JoinTable,
-  ManyToMany,
+  JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import Prestataire from 'src/prestataire/models/prestataire.entity';
+import Service from '../../service/models/service.entity';
+import Category from '../../category/models/Category.entity';
+import Prestataire from "../../prestataire/models/prestataire.entity";
 
 @Entity()
 class Prestation {
   @PrimaryGeneratedColumn('uuid')
   public id: string;
 
-  @Column()
-  public content: string;
-
-  @Column()
-  public title: string;
-
-  // Ouvert/fermé/
-  @Column({ default: false })
-  public status: boolean;
-
-  /*  @Column({ type: 'timestamp', default: Date.now() })
-  createdAt: Date;
-
-  @Column({ type: 'timestamp', default: Date.now() })
-  UpdatedAt: Date;
-*/
-
   @Column({ nullable: true })
-  @Transform((value) => {
-    if (value !== null) {
-      return value;
-    }
-  })
-  public category?: string;
+  public description: string;
 
-  @ManyToOne(() => User, (author: User) => author.prestations)
-  public author: User;
+  @Column({ unique: true })
+  public name: string;
 
-  @Column({ default: false })
-  enable: boolean;
+  @Column()
+  public price: number;
 
-  @ManyToMany(
-    () => Prestataire,
-    (prestataire: Prestataire) => prestataire.prestationApply,
-  )
-  @JoinTable()
-  public candidates: Prestataire[];
+  @ManyToOne(() => Category, (category: Category) => category.prestations)
+  public category: Category;
 
-  @ManyToOne(
-    () => Prestataire,
-    (author: Prestataire) => author.prestationsSelected,
-  )
-  public selectedPrestataire: Prestataire;
+  @ManyToOne(() => Prestataire, (prestataire: Prestataire) => prestataire.prestations)
+  public prestataire: Prestataire;
 }
 
 export default Prestation;

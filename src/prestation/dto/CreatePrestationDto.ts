@@ -1,10 +1,17 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreatePrestationDto {
-  @IsNotEmpty()
-  content: string;
+  description: string;
 
   @IsNotEmpty()
   @IsString()
-  title: string;
+  name: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  price: number;
+
+  @IsNotEmpty()
+  @IsString()
+  idCategory: string;
 }

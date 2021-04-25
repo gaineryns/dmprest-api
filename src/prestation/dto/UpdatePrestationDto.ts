@@ -1,10 +1,15 @@
-import { IsNotEmpty, IsUUID } from "class-validator";
+import { IsNotEmpty, IsNumber, IsUUID } from 'class-validator';
 
 export class UpdatePrestationDto {
   @IsUUID()
   id: string;
+
+  description: string;
+
   @IsNotEmpty()
-  content: string;
+  name: string;
+
   @IsNotEmpty()
-  title: string;
+  @IsNumber()
+  price: number;
 }

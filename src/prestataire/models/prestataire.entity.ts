@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinTable,
   ManyToMany,
   OneToMany,
   OneToOne,
@@ -8,7 +9,8 @@ import {
 } from 'typeorm';
 import User from '../../users/models/users.entity';
 import Prestation from '../../prestation/models/prestation.entity';
-import Category from '../../prestation/models/category.entity';
+import Category from '../../category/models/Category.entity';
+import Service from "../../service/models/service.entity";
 
 @Entity()
 class Prestataire {
@@ -18,25 +20,27 @@ class Prestataire {
   @Column({ nullable: true })
   public presentation: string;
 
+  @Column({ default: false })
+  public enabe: boolean;
+
   @Column({ nullable: true })
   public formation: string;
 
   @OneToOne(() => User, (user: User) => user.prestataire)
   public user: User;
 
-  @ManyToMany(
-    () => Prestation,
-    (prestation: Prestation) => prestation.candidates,
-  )
-  public prestationApply: Prestation[];
-
   @OneToMany(
     () => Prestation,
-    (prestation: Prestation) => prestation.selectedPrestataire,
+    (prestation: Prestation) => prestation.prestataire,
   )
-  public prestationsSelected: Prestation;
+  public prestations: Prestation[];
 
   @ManyToMany(() => Category, (category: Category) => category.prestataires)
+  @JoinTable()
   public categories: Category[];
+
+  @ManyToMany(() => Service, (service: Service) => service.prestataires)
+  @JoinTable()
+  public services: Service[];
 }
 export default Prestataire;

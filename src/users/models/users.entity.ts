@@ -7,7 +7,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import Prestation from '../../prestation/models/prestation.entity';
+import Prestation from '../../category/models/Category.entity';
 import Prestataire from '../../prestataire/models/prestataire.entity';
 
 @Entity()
@@ -33,9 +33,6 @@ class User {
 
   @Column({ nullable: true })
   public country: string;
-
-  @OneToMany(() => Prestation, (prestation: Prestation) => prestation.author)
-  public prestations: Prestation[];
 
   @OneToOne(() => Prestataire, {
     eager: false,

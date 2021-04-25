@@ -3,13 +3,16 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PrestationController } from './prestation/prestation.controller';
-import { PrestationService } from './prestation/prestation.service';
+import { CategoryController } from './category/category.controller';
+import { CategoryService } from './category/category.service';
 import { DatabaseModule } from './database/database.module';
-import { PrestationModule } from './prestation/prestation.module';
+import { CategoryModule } from './category/category.module';
 import { UsersModule } from './users/users.module';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { PrestataireModule } from './prestataire/prestataire.module';
+import { ServiceModule } from './service/service.module';
+import { PrestationService } from './prestation/prestation.service';
+import { PrestationModule } from './prestation/prestation.module';
 
 @Module({
   imports: [
@@ -26,12 +29,14 @@ import { PrestataireModule } from './prestataire/prestataire.module';
       }),
     }),
     DatabaseModule,
-    PrestationModule,
+    CategoryModule,
     UsersModule,
     AuthenticationModule,
     PrestataireModule,
+    ServiceModule,
+    PrestationModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, PrestationService],
 })
 export class AppModule {}
